@@ -1,100 +1,76 @@
+## 🧠 Project Three: System Architecture Recommendations
 
+As The Gaming Room seeks to scale *Draw It or Lose It* across multiple platforms and users, here are final architectural recommendations that address the client’s long-term goals in server selection, memory, storage, networking, and security.
 
-```markdown
-# CS 230 • Project One – _Game Service Application_
+### 🖥️ Recommended Operating Platform
 
-A Java mini-game framework that demonstrates two classic design patterns—**Singleton** and **Iterator**—in the context of managing multiple game instances.  
-This repository contains the starter code provided by SNHU plus the milestone deliverables (completed UML, updated source files, and tests).
-
----
-
-## ✨ Project Highlights
-| Pattern | Class / Method | What It Solves |
-|---------|----------------|----------------|
-| **Singleton** | `GameService` | Guarantees exactly one in-memory service that hands out game IDs and keeps global state. |
-| **Iterator** | `GameService#addGame` / `getGame` | Traverses the collection of active games to enforce unique names and allow look-ups. |
+**Ubuntu Server (Linux)** is the recommended platform. It is:
+- Cost-effective (free/open-source)
+- Scalable for cloud environments (AWS, GCP, Azure)
+- Compatible with Java-based stacks (Spring Boot, Dropwizard)
+- Backed by strong community and enterprise support
 
 ---
 
-## 📂 Repository Layout
+### 🧱 Operating System Architecture
 
-```
+Ubuntu is a **monolithic kernel-based architecture** with modular support. Key features:
+- Unified memory and process control
+- Multi-user and multi-tasking
+- Highly configurable for containerization (e.g., Docker, LXC)
 
-📦cs-230-game-service
-├─ docs/                  ← UML class diagram (`GameServiceSingleton.png`)
-├─ src/
-│  └─ main/
-│     └─ java/
-│        └─ edu/snhu/game/
-│           ├─ GameService.java     ← Singleton + Iterator logic
-│           ├─ ProgramDriver.java   ← Console entry-point
-│           ├─ SingletonTester.java ← JUnit verification
-│           ├─ Player.java          ← (provided; to be completed in a later milestone)
-│           └─ Team.java            ← (provided; to be completed in a later milestone)
-└─ README.md              ← You are here
-
-````
+This architecture ensures reliable performance under multiplayer game loads, while offering low-level control over networking, threads, and security.
 
 ---
 
-## 🚀 Quick Start
+### 💾 Storage Management
 
-1. **Clone and import into Eclipse**
+We recommend a **virtualized block storage** solution, such as:
+- **LVM** (Logical Volume Manager) for flexible partitioning
+- Integration with **cloud storage volumes** (e.g., Amazon EBS, Azure Disk)
 
-   ```bash
-   git clone https://github.com/<your-username>/cs-230-game-service.git
-````
-
-*File ▶ Import ▶ Existing Projects into Workspace*, then select the folder you just cloned.
-
-2. **Run the application**
-
-   *Right-click* **ProgramDriver.java** ▶ *Run As ▶ Java Application*.
-
-3. **Run the unit tests** (optional)
-
-   *Right-click* the `test` package ▶ *Run As ▶ JUnit Test*.
-
-> **Java version**: Tested on JDK 17. Any Java 11+ runtime should work.
+Game data (user stats, session records, and drawing libraries) can be stored using:
+- **Relational DB**: PostgreSQL for game metadata
+- **Object storage**: AWS S3 or equivalent for image assets
 
 ---
 
-## 🛠️ Design Patterns in Detail
+### 🧠 Memory Management
 
-### Singleton (`GameService`)
+Ubuntu uses a **demand paging** model with swap space. Techniques include:
+- Paging and segmentation for app isolation
+- Caching and memory-mapped I/O for high-speed access
+- Tools like `top`, `htop`, and `vmstat` to monitor memory in real time
 
-* **Private constructor** prevents external instantiation.
-* **`private static GameService instance`** holds the sole object.
-* **`public static GameService getInstance()`** lazily creates (or returns) the instance.
-* Thread-safety is not a requirement for the milestone; if you extend this, consider double-checked locking.
-
-### Iterator (Java Collections)
-
-The `games` list is a standard `ArrayList<Game>`.
-`addGame` and `getGame` rely on the enhanced `for` loop (syntactic sugar for the `Iterator` interface) to:
-
-1. Walk through all existing games.
-2. Compare each game’s unique name.
-3. Return or reject duplicates in `O(n)` time.
+This ensures efficient memory allocation when hundreds or thousands of concurrent game sessions are active.
 
 ---
 
-## 🖼️ UML Diagram
+### 🌐 Distributed Systems & Network Communication
 
-The completed class diagram is in **`docs/GameServiceSingleton.png`** (exported from Lucidchart).
-Use it as a quick reference for attributes, methods, and relationships.
+To support distributed multiplayer sessions:
+- **WebSocket or REST APIs** will facilitate client-server communication
+- Services will be deployed via **cloud load balancers** (e.g., NGINX, AWS ALB)
+- Platforms will communicate over TCP/IP via HTTPS
+
+Dependencies and availability can be managed using:
+- **Health checks & auto-scaling**
+- **Retry logic and fallback strategies**
+- Distributed logging and monitoring (e.g., ELK Stack or Prometheus/Grafana)
+
+---
+
+### 🔐 Security
+
+Security must protect both in-transit and at-rest data:
+- **HTTPS** and **SSL/TLS encryption** for all communication
+- **OAuth2 or JWT** for secure, token-based authentication
+- **Role-based access control (RBAC)** for admins, players, and guests
+- **Firewalls and intrusion detection (e.g., UFW, Fail2Ban)** on Ubuntu server
+
+Data at rest will be encrypted using tools like **dm-crypt** or **cloud-native encryption keys** (e.g., AWS KMS).
 
 ---
 
-## ✍️ How to Contribute
-
-Pull requests are welcome for refactoring, adding tests, or implementing the remaining `Player` and `Team` functionality. Please open an issue to discuss changes first.
-
----
-
-## 📜 License
-
-This project is released for educational purposes under the MIT License. See **LICENSE** for details.
-
----
+> With this system architecture in place, *Draw It or Lose It* will be positioned to grow as a secure, scalable, and cross-platform gaming experience.
 
