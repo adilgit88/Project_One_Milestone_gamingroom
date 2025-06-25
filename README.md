@@ -71,6 +71,7 @@ Security must protect both in-transit and at-rest data:
 Data at rest will be encrypted using tools like **dm-crypt** or **cloud-native encryption keys** (e.g., AWS KMS).
 
 ---
+![image](https://github.com/user-attachments/assets/f4363f81-17ba-4b86-b5e7-7062dc193192)
 
 > With this system architecture in place, *Draw It or Lose It* will be positioned to grow as a secure, scalable, and cross-platform gaming experience.
 
